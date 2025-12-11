@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package ai.h2o.imagestore.v1;
+
+import "google/api/field_behavior.proto";
+import "google/api/resource.proto";
+import "google/protobuf/timestamp.proto";
+
+// A low-resolution preview thumbnail of an image.
+message ImagePreview {
+  // The raw preview image data.
+  bytes data = 1;
+
+  // The MIME type of the preview (e.g., "image/png").
+  string mime_type = 2;
+}
+
+// An image stored in the image storage service.
+message Image {
+  option (google.api.resource) = {
+    type: "imagestore.h2o.ai/Image"
+    pattern: "images/{image}"
+    singular: "image"
+    plural: "images"
+  };
+
+  // The resource name of the image.
+  // Format: `images/{image}`
+  string name = 1 [(google.api.field_behavior) = IDENTIFIER];
+
+  // The original filename of the image.
+  string filename = 2 [(google.api.field_behavior) = REQUIRED];
+
+  // The MIME type of the image (e.g., "image/jpeg", "image/png").
+  string mime_type = 3 [(google.api.field_behavior) = OUTPUT_ONLY];
+
+  // The size of the image in bytes.
+  int64 size_bytes = 4 [(google.api.field_behavior) = OUTPUT_ONLY];
+
+  // The time when the image was uploaded.
+  google.protobuf.Timestamp create_time = 5 [(google.api.field_behavior) = OUTPUT_ONLY];
+
+  // The raw image data for upload.
+  // Used only when creating an image.
+  bytes data = 6 [(google.api.field_behavior) = INPUT_ONLY];
+
+  // A low-resolution preview thumbnail of the image.
+  // Suitable for displaying in lists and galleries.
+  ImagePreview preview = 7 [(google.api.field_behavior) = OUTPUT_ONLY];
+}
