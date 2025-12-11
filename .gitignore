@@ -1,0 +1,28 @@
+# Generated code
+gen/
+
+# IDE
+.idea/
+.claude/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+bin/
+dist/
+*.pb.go
+*_pb2.py
+*_grpc.py
+
+# Dependencies
+node_modules/
+vendor/
+
+# Environment
+.env
+.env.local
