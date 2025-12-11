@@ -7,7 +7,7 @@
 package imagestorev1
 
 import (
-	_ "github.com/jan-sykora/api-demo/api/google/api"
+	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -199,9 +199,9 @@ const file_ai_h2o_imagestore_v1_image_proto_rawDesc = "" +
 	"createTime\x12\x17\n" +
 	"\x04data\x18\x06 \x01(\fB\x03\xe0A\x04R\x04data\x12A\n" +
 	"\apreview\x18\a \x01(\v2\".ai.h2o.imagestore.v1.ImagePreviewB\x03\xe0A\x03R\apreview:;\xeaA8\n" +
-	"\x17imagestore.h2o.ai/Image\x12\x0eimages/{image}*\x06images2\x05imageB\xdf\x01\n" +
+	"\x17imagestore.h2o.ai/Image\x12\x0eimages/{image}*\x06images2\x05imageB\xe2\x01\n" +
 	"\x18com.ai.h2o.imagestore.v1B\n" +
-	"ImageProtoP\x01ZDgithub.com/jan-sykora/api-demo/api/ai/h2o/imagestore/v1;imagestorev1\xa2\x02\x03AHI\xaa\x02\x14Ai.H2o.Imagestore.V1\xca\x02\x14Ai\\H2o\\Imagestore\\V1\xe2\x02 Ai\\H2o\\Imagestore\\V1\\GPBMetadata\xea\x02\x17Ai::H2o::Imagestore::V1b\x06proto3"
+	"ImageProtoP\x01ZGgithub.com/jan-sykora/api-demo/gen/go/ai/h2o/imagestore/v1;imagestorev1\xa2\x02\x03AHI\xaa\x02\x14Ai.H2o.Imagestore.V1\xca\x02\x14Ai\\H2o\\Imagestore\\V1\xe2\x02 Ai\\H2o\\Imagestore\\V1\\GPBMetadata\xea\x02\x17Ai::H2o::Imagestore::V1b\x06proto3"
 
 var (
 	file_ai_h2o_imagestore_v1_image_proto_rawDescOnce sync.Once

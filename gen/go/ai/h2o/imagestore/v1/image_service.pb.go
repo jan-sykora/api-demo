@@ -7,7 +7,7 @@
 package imagestorev1
 
 import (
-	_ "github.com/jan-sykora/api-demo/api/google/api"
+	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -545,8 +545,8 @@ const file_ai_h2o_imagestore_v1_image_service_proto_rawDesc = "" +
 	"ListImages\x12'.ai.h2o.imagestore.v1.ListImagesRequest\x1a(.ai.h2o.imagestore.v1.ListImagesResponse\"\x12\x82\xd3\xe4\x93\x02\f\x12\n" +
 	"/v1/images\x12\x7f\n" +
 	"\vDeleteImage\x12(.ai.h2o.imagestore.v1.DeleteImageRequest\x1a).ai.h2o.imagestore.v1.DeleteImageResponse\"\x1b\x82\xd3\xe4\x93\x02\x15*\x13/v1/{name=images/*}\x12\x8e\x01\n" +
-	"\rDownloadImage\x12*.ai.h2o.imagestore.v1.DownloadImageRequest\x1a+.ai.h2o.imagestore.v1.DownloadImageResponse\"$\x82\xd3\xe4\x93\x02\x1e\x12\x1c/v1/{name=images/*}:downloadB\xe6\x01\n" +
-	"\x18com.ai.h2o.imagestore.v1B\x11ImageServiceProtoP\x01ZDgithub.com/jan-sykora/api-demo/api/ai/h2o/imagestore/v1;imagestorev1\xa2\x02\x03AHI\xaa\x02\x14Ai.H2o.Imagestore.V1\xca\x02\x14Ai\\H2o\\Imagestore\\V1\xe2\x02 Ai\\H2o\\Imagestore\\V1\\GPBMetadata\xea\x02\x17Ai::H2o::Imagestore::V1b\x06proto3"
+	"\rDownloadImage\x12*.ai.h2o.imagestore.v1.DownloadImageRequest\x1a+.ai.h2o.imagestore.v1.DownloadImageResponse\"$\x82\xd3\xe4\x93\x02\x1e\x12\x1c/v1/{name=images/*}:downloadB\xe9\x01\n" +
+	"\x18com.ai.h2o.imagestore.v1B\x11ImageServiceProtoP\x01ZGgithub.com/jan-sykora/api-demo/gen/go/ai/h2o/imagestore/v1;imagestorev1\xa2\x02\x03AHI\xaa\x02\x14Ai.H2o.Imagestore.V1\xca\x02\x14Ai\\H2o\\Imagestore\\V1\xe2\x02 Ai\\H2o\\Imagestore\\V1\\GPBMetadata\xea\x02\x17Ai::H2o::Imagestore::V1b\x06proto3"
 
 var (
 	file_ai_h2o_imagestore_v1_image_service_proto_rawDescOnce sync.Once
