@@ -1,6 +1,3 @@
-# Generated code
-gen/
-
 # IDE
 .idea/
 .claude/
@@ -15,9 +12,6 @@ Thumbs.db
 # Build artifacts
 bin/
 dist/
-*.pb.go
-*_pb2.py
-*_grpc.py
 
 # Dependencies
 node_modules/

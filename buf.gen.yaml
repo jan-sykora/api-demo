@@ -2,7 +2,9 @@ version: v1
 managed:
   enabled: true
   go_package_prefix:
-    default: github.com/jan-sykora/api-demo/api
+    default: github.com/jan-sykora/api-demo/gen/go
+    except:
+      - buf.build/googleapis/googleapis
 plugins:
   - plugin: buf.build/protocolbuffers/go
     out: gen/go
