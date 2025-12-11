@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Animal Classifier</title>
+  </head>
+  <body>
+    <div id="app">
+      <header>
+        <h1>Animal Classifier</h1>
+        <p>Upload an image to identify the animal</p>
+      </header>
+
+      <main>
+        <section class="upload-section">
+          <div class="upload-area" id="upload-area">
+            <input type="file" id="file-input" accept="image/*" hidden />
+            <p>Drop an image here or <button id="browse-btn">browse</button></p>
+          </div>
+        </section>
+
+        <section class="gallery-section">
+          <h2>Uploaded Images</h2>
+          <div class="gallery" id="gallery"></div>
+        </section>
+      </main>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
