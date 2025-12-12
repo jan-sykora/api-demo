@@ -134,6 +134,125 @@ header p {
   padding: 2rem;
 }
 
+/* Navigation */
+nav {
+  margin-top: 1rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+nav a {
+  color: #888;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+nav a:hover {
+  background-color: rgba(100, 108, 255, 0.1);
+  color: #646cff;
+}
+
+nav a.active {
+  background-color: #646cff;
+  color: white;
+}
+
+/* Events page */
+.events-section {
+  margin-top: 1rem;
+}
+
+.events-controls {
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.events-controls button {
+  background: #646cff;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.events-controls button:hover {
+  background: #535bf2;
+}
+
+.events-table-container {
+  overflow-x: auto;
+}
+
+.events-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.events-table th,
+.events-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #333;
+}
+
+.events-table th {
+  background: #1a1a1a;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.events-table tbody tr:hover {
+  background: rgba(100, 108, 255, 0.05);
+}
+
+.events-table .event-name {
+  font-family: monospace;
+  font-size: 0.8rem;
+}
+
+.events-table .event-duration {
+  font-family: monospace;
+}
+
+.events-table .empty-events,
+.events-table .loading,
+.events-table .error {
+  text-align: center;
+  color: #666;
+  padding: 2rem;
+}
+
+.events-table .error {
+  color: #e57373;
+}
+
+.pagination {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.pagination button {
+  background: transparent;
+  color: #646cff;
+  border: 1px solid #646cff;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.pagination button:hover {
+  background: rgba(100, 108, 255, 0.1);
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
@@ -146,5 +265,14 @@ header p {
 
   .gallery-item {
     background: #f5f5f5;
+  }
+
+  .events-table th {
+    background: #f0f0f0;
+  }
+
+  .events-table th,
+  .events-table td {
+    border-bottom-color: #ddd;
   }
 }
