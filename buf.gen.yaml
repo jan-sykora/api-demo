@@ -1,14 +1,37 @@
-version: v1
+version: v2
 managed:
   enabled: true
-  go_package_prefix:
-    default: github.com/jan-sykora/api-demo/gen/go
-    except:
-      - buf.build/googleapis/googleapis
+  override:
+    - file_option: go_package_prefix
+      value: github.com/jan-sykora/api-demo/gen/go
+    - file_option: go_package_prefix
+      module: buf.build/googleapis/googleapis
+      value: ""
+inputs:
+  - directory: api/proto
 plugins:
-  - plugin: buf.build/protocolbuffers/go
+  # Go protobuf messages
+  - remote: buf.build/protocolbuffers/go
     out: gen/go
     opt: paths=source_relative
-  - plugin: buf.build/grpc/go
+  # Go gRPC (keep for compatibility)
+  - remote: buf.build/grpc/go
     out: gen/go
     opt: paths=source_relative
+  # Go Connect handlers
+  - remote: buf.build/connectrpc/go
+    out: gen/go
+    opt: paths=source_relative
+  # TypeScript protobuf messages
+  - remote: buf.build/bufbuild/es
+    out: web/src/gen
+    opt:
+      - target=ts
+      - import_extension=none
+    include_imports: true
+  # TypeScript Connect client
+  - remote: buf.build/connectrpc/es
+    out: web/src/gen
+    opt:
+      - target=ts
+      - import_extension=none
