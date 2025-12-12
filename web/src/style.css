@@ -43,6 +43,37 @@ header p {
   margin-top: 0.5rem;
 }
 
+nav {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.nav-link {
+  color: #888;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: color 0.2s, background-color 0.2s;
+}
+
+.nav-link:hover {
+  color: #fff;
+  background-color: rgba(100, 108, 255, 0.1);
+}
+
+.nav-link.active {
+  color: #646cff;
+  background-color: rgba(100, 108, 255, 0.1);
+}
+
+.subtitle {
+  text-align: center;
+  color: #888;
+  margin-bottom: 2rem;
+}
+
 .upload-section {
   margin-bottom: 2rem;
 }
@@ -128,10 +159,39 @@ header p {
   background: #444;
 }
 
-.empty-gallery {
+.empty-gallery,
+.empty-events,
+.loading {
   color: #666;
   text-align: center;
   padding: 2rem;
+}
+
+.events-section h2 {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.events-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.events-table th,
+.events-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #333;
+}
+
+.events-table th {
+  color: #888;
+  font-weight: 500;
+}
+
+.events-table tr:hover {
+  background-color: rgba(100, 108, 255, 0.05);
 }
 
 @media (prefers-color-scheme: light) {
