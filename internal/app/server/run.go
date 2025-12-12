@@ -63,6 +63,24 @@ func runHTTPServer() error {
 		return err
 	}
 
+	// Wrap with CORS handler for browser requests
+	handler := corsHandler(mux)
+
 	log.Printf("Starting HTTP server (gRPC-Gateway) on %s", httpAddr)
-	return http.ListenAndServe(httpAddr, mux)
+	return http.ListenAndServe(httpAddr, handler)
+}
+
+func corsHandler(h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+
+		if r.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusNoContent)
+			return
+		}
+
+		h.ServeHTTP(w, r)
+	})
 }
