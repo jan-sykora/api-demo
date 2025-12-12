@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+package ai.h2o.usage.v1;
+
+import "ai/h2o/usage/v1/event.proto";
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+
+// Service for tracking usage events.
+service EventService {
+  // Creates a new usage event.
+  rpc CreateEvent(CreateEventRequest) returns (CreateEventResponse) {
+    option (google.api.http) = {
+      post: "/v1/events"
+      body: "*"
+    };
+  }
+
+  // Lists usage events.
+  rpc ListEvents(ListEventsRequest) returns (ListEventsResponse) {
+    option (google.api.http) = {
+      get: "/v1/events"
+    };
+  }
+}
+
+// Request message for CreateEvent.
+message CreateEventRequest {
+  // The event to create.
+  Event event = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+// Response message for CreateEvent.
+message CreateEventResponse {
+  // The created event.
+  Event event = 1;
+}
+
+// Request message for ListEvents.
+message ListEventsRequest {
+  // The maximum number of events to return.
+  int32 page_size = 1;
+
+  // A page token, received from a previous `ListEvents` call.
+  string page_token = 2;
+}
+
+// Response message for ListEvents.
+message ListEventsResponse {
+  // The list of events.
+  repeated Event events = 1;
+
+  // A token to retrieve the next page of results.
+  string next_page_token = 2;
+}
