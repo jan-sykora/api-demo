@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package ai.h2o.usage.v1;
+
+import "google/api/field_behavior.proto";
+import "google/api/resource.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
+
+// A usage event recording an operation.
+message Event {
+  option (google.api.resource) = {
+    type: "usage.h2o.ai/Event"
+    pattern: "events/{event}"
+    singular: "event"
+    plural: "events"
+  };
+
+  // The resource name of the event.
+  // Format: `events/{event}`
+  string name = 1 [(google.api.field_behavior) = IDENTIFIER];
+
+  // The subject who performed the action.
+  // Format: `users/{user}`
+  string subject = 2 [(google.api.field_behavior) = REQUIRED];
+
+  // The source where the action originated (e.g., "animal-classifier").
+  string source = 3 [(google.api.field_behavior) = REQUIRED];
+
+  // The action that was performed (e.g., "classify").
+  string action = 4 [(google.api.field_behavior) = REQUIRED];
+
+  // How long the operation took to complete.
+  google.protobuf.Duration execution_duration = 5 [(google.api.field_behavior) = REQUIRED];
+
+  // The time when the event was recorded.
+  google.protobuf.Timestamp create_time = 6 [(google.api.field_behavior) = OUTPUT_ONLY];
+}
