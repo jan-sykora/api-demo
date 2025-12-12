@@ -38,10 +38,7 @@ grpcurl -plaintext -d '{
     "subject": "users/anonymous",
     "source": "animal-classifier",
     "action": "classify",
-    "execution_duration": {
-      "seconds": "1",
-      "nanos": 500000000
-    }
+    "execution_duration": "1.5s"
   }
 }' localhost:8081 ai.h2o.usage.v1.EventService/CreateEvent
 ```
