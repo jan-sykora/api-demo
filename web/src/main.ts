@@ -1,4 +1,6 @@
 import './style.css'
+import { EventService_CreateEvent } from './gen/ai/h2o/usage/v1/event_service_pb'
+import type { RequestConfig } from './gen/runtime'
 
 interface ImageItem {
   id: string
@@ -9,6 +11,30 @@ interface ImageItem {
 
 const ANIMALS = ['Dog', 'Cat', 'Bird', 'Horse', 'Elephant', 'Lion', 'Tiger', 'Bear', 'Rabbit', 'Fox']
 const STORAGE_KEY = 'animal-classifier-images'
+const USER_ID = 'users/anonymous'
+
+const apiConfig: RequestConfig = {
+  basePath: 'http://localhost:8080',
+}
+
+async function sendUsageEvent(durationMs: number): Promise<void> {
+  const request = EventService_CreateEvent.createRequest(apiConfig, {
+    event: {
+      subject: USER_ID,
+      source: 'animal-classifier',
+      action: 'classify',
+      executionDuration: `${(durationMs / 1000).toFixed(3)}s`,
+    },
+  })
+
+  try {
+    const response = await fetch(request)
+    const data = EventService_CreateEvent.responseTypeId(await response.json())
+    console.log('Usage event recorded:', data.event?.name)
+  } catch (error) {
+    console.error('Failed to send usage event:', error)
+  }
+}
 
 function saveImages(): void {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(images))
@@ -76,7 +102,8 @@ function handleFile(file: File): void {
     saveImages()
     renderGallery()
 
-    // Simulate async classification
+    // Simulate async classification and track duration
+    const startTime = performance.now()
     const classificationDelay = 1000 + Math.random() * 1000
 
     setTimeout(() => {
@@ -85,6 +112,9 @@ function handleFile(file: File): void {
         img.classification = mockClassify()
         saveImages()
         renderGallery()
+
+        const durationMs = performance.now() - startTime
+        sendUsageEvent(durationMs)
       }
     }, classificationDelay)
   }
