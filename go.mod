@@ -4,6 +4,7 @@ go 1.25.5
 
 require (
 	connectrpc.com/connect v1.19.1
+	connectrpc.com/cors v0.1.0
 	github.com/google/uuid v1.6.0
 	golang.org/x/net v0.46.1-0.20251013234738-63d1a5100f82
 	google.golang.org/genproto/googleapis/api v0.0.0-20251202230838-ff82c1b0f217

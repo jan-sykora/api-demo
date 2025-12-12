@@ -3,7 +3,9 @@ package server
 import (
 	"log"
 	"net/http"
+	"strings"
 
+	"connectrpc.com/cors"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
 
@@ -21,5 +23,19 @@ func Run() error {
 	mux.Handle(path, handler)
 
 	log.Printf("Starting Connect server on %s", addr)
-	return http.ListenAndServe(addr, h2c.NewHandler(mux, &http2.Server{}))
+	return http.ListenAndServe(addr, withCORS(h2c.NewHandler(mux, &http2.Server{})))
+}
+
+func withCORS(h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", strings.Join(cors.AllowedMethods(), ", "))
+		w.Header().Set("Access-Control-Allow-Headers", strings.Join(cors.AllowedHeaders(), ", "))
+		w.Header().Set("Access-Control-Expose-Headers", strings.Join(cors.ExposedHeaders(), ", "))
+		if r.Method == http.MethodOptions {
+			w.WriteHeader(http.StatusNoContent)
+			return
+		}
+		h.ServeHTTP(w, r)
+	})
 }
