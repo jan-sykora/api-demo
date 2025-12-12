@@ -1,5 +1,5 @@
 version: v1
-name: buf.build/jan-sykora/usage
+name: buf.build/jan-sykora-api-demo/usage
 deps:
   - buf.build/googleapis/googleapis
 breaking:
