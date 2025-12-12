@@ -16,12 +16,29 @@ interface ImageItem {
 
 const ANIMALS = ['Dog', 'Cat', 'Bird', 'Horse', 'Elephant', 'Lion', 'Tiger', 'Bear', 'Rabbit', 'Fox']
 const USER_ID = 'users/anonymous'
+const STORAGE_KEY = 'animal-classifier-images'
 
 const transport = createConnectTransport({
   baseUrl: 'http://localhost:50051',
 })
 
 const client = createClient(EventService, transport)
+
+function saveImages(): void {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(images))
+}
+
+function loadImages(): ImageItem[] {
+  const stored = localStorage.getItem(STORAGE_KEY)
+  if (stored) {
+    try {
+      return JSON.parse(stored)
+    } catch {
+      return []
+    }
+  }
+  return []
+}
 
 async function sendUsageEvent(durationMs: number): Promise<void> {
   const seconds = Math.floor(durationMs / 1000)
@@ -46,8 +63,8 @@ async function sendUsageEvent(durationMs: number): Promise<void> {
   }
 }
 
-// In-memory storage (simulates our future API)
-const images: ImageItem[] = []
+// Load images from localStorage
+const images: ImageItem[] = loadImages()
 
 function generateId(): string {
   return Math.random().toString(36).substring(2, 9)
@@ -94,6 +111,7 @@ function handleFile(file: File): void {
     }
 
     images.unshift(newImage)
+    saveImages()
     renderGallery()
 
     // Simulate async classification and track duration
@@ -104,6 +122,7 @@ function handleFile(file: File): void {
       const img = images.find(i => i.id === id)
       if (img) {
         img.classification = mockClassify()
+        saveImages()
         renderGallery()
 
         const durationMs = performance.now() - startTime
