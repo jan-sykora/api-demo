@@ -57,6 +57,37 @@ grpcurl -plaintext -d '{
 }' localhost:8081 ai.h2o.usage.v1.EventService/ListEvents
 ```
 
+## HTTP API Examples (gRPC-Gateway)
+
+The HTTP server runs on `localhost:8080` and proxies requests to the gRPC server.
+
+### Create an event
+
+```bash
+curl -X POST http://localhost:8080/v1/events \
+  -H "Content-Type: application/json" \
+  -d '{
+    "event": {
+      "subject": "users/anonymous",
+      "source": "animal-classifier",
+      "action": "classify",
+      "execution_duration": "1.5s"
+    }
+  }'
+```
+
+### List events
+
+```bash
+curl http://localhost:8080/v1/events
+```
+
+### List events with pagination
+
+```bash
+curl "http://localhost:8080/v1/events?pageSize=10"
+```
+
 ## Development Commands
 
 ```bash
