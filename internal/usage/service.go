@@ -6,9 +6,8 @@ import (
 	"sort"
 	"time"
 
+	"connectrpc.com/connect"
 	"github.com/google/uuid"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	pb "github.com/jan-sykora/api-demo/gen/go/ai/h2o/usage/v1"
@@ -25,9 +24,8 @@ type storedEvent struct {
 	createTime time.Time
 }
 
-// Service implements the EventService gRPC service.
+// Service implements the EventService Connect handler.
 type Service struct {
-	pb.UnimplementedEventServiceServer
 	events map[string]*storedEvent // keyed by event ID
 }
 
@@ -39,21 +37,21 @@ func NewService() *Service {
 }
 
 // CreateEvent creates a new usage event.
-func (s *Service) CreateEvent(ctx context.Context, req *pb.CreateEventRequest) (*pb.CreateEventResponse, error) {
-	if req.GetEvent() == nil {
-		return nil, status.Error(codes.InvalidArgument, "event is required")
+func (s *Service) CreateEvent(ctx context.Context, req *connect.Request[pb.CreateEventRequest]) (*connect.Response[pb.CreateEventResponse], error) {
+	if req.Msg.GetEvent() == nil {
+		return nil, connect.NewError(connect.CodeInvalidArgument, fmt.Errorf("event is required"))
 	}
-	if req.GetEvent().GetSubject() == "" {
-		return nil, status.Error(codes.InvalidArgument, "subject is required")
+	if req.Msg.GetEvent().GetSubject() == "" {
+		return nil, connect.NewError(connect.CodeInvalidArgument, fmt.Errorf("subject is required"))
 	}
-	if req.GetEvent().GetSource() == "" {
-		return nil, status.Error(codes.InvalidArgument, "source is required")
+	if req.Msg.GetEvent().GetSource() == "" {
+		return nil, connect.NewError(connect.CodeInvalidArgument, fmt.Errorf("source is required"))
 	}
-	if req.GetEvent().GetAction() == "" {
-		return nil, status.Error(codes.InvalidArgument, "action is required")
+	if req.Msg.GetEvent().GetAction() == "" {
+		return nil, connect.NewError(connect.CodeInvalidArgument, fmt.Errorf("action is required"))
 	}
-	if req.GetEvent().GetExecutionDuration() == nil {
-		return nil, status.Error(codes.InvalidArgument, "execution_duration is required")
+	if req.Msg.GetEvent().GetExecutionDuration() == nil {
+		return nil, connect.NewError(connect.CodeInvalidArgument, fmt.Errorf("execution_duration is required"))
 	}
 
 	id := uuid.New().String()
@@ -62,11 +60,11 @@ func (s *Service) CreateEvent(ctx context.Context, req *pb.CreateEventRequest) (
 
 	event := &pb.Event{
 		Name:              name,
-		Subject:          req.GetEvent().GetSubject(),
-		Source:           req.GetEvent().GetSource(),
-		Action:           req.GetEvent().GetAction(),
-		ExecutionDuration: req.GetEvent().GetExecutionDuration(),
-		CreateTime:       timestamppb.New(now),
+		Subject:           req.Msg.GetEvent().GetSubject(),
+		Source:            req.Msg.GetEvent().GetSource(),
+		Action:            req.Msg.GetEvent().GetAction(),
+		ExecutionDuration: req.Msg.GetEvent().GetExecutionDuration(),
+		CreateTime:        timestamppb.New(now),
 	}
 
 	s.events[id] = &storedEvent{
@@ -74,12 +72,12 @@ func (s *Service) CreateEvent(ctx context.Context, req *pb.CreateEventRequest) (
 		createTime: now,
 	}
 
-	return &pb.CreateEventResponse{Event: event}, nil
+	return connect.NewResponse(&pb.CreateEventResponse{Event: event}), nil
 }
 
 // ListEvents lists usage events with pagination.
-func (s *Service) ListEvents(ctx context.Context, req *pb.ListEventsRequest) (*pb.ListEventsResponse, error) {
-	pageSize := int(req.GetPageSize())
+func (s *Service) ListEvents(ctx context.Context, req *connect.Request[pb.ListEventsRequest]) (*connect.Response[pb.ListEventsResponse], error) {
+	pageSize := int(req.Msg.GetPageSize())
 	if pageSize <= 0 {
 		pageSize = defaultPageSize
 	}
@@ -100,9 +98,9 @@ func (s *Service) ListEvents(ctx context.Context, req *pb.ListEventsRequest) (*p
 
 	// Handle pagination
 	startIdx := 0
-	if req.GetPageToken() != "" {
+	if req.Msg.GetPageToken() != "" {
 		for i, e := range allEvents {
-			if e.event.GetName() == req.GetPageToken() {
+			if e.event.GetName() == req.Msg.GetPageToken() {
 				startIdx = i + 1
 				break
 			}
@@ -126,8 +124,8 @@ func (s *Service) ListEvents(ctx context.Context, req *pb.ListEventsRequest) (*p
 		nextPageToken = allEvents[endIdx-1].event.GetName()
 	}
 
-	return &pb.ListEventsResponse{
+	return connect.NewResponse(&pb.ListEventsResponse{
 		Events:        result,
 		NextPageToken: nextPageToken,
-	}, nil
+	}), nil
 }

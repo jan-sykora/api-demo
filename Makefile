@@ -1,4 +1,4 @@
-.PHONY: run-web run-server build-server generate lint
+.PHONY: run-web run-server build-server generate lint clean-gen
 
 run-web:
 	cd web && npm run dev
@@ -9,8 +9,11 @@ run-server:
 build-server:
 	go build -o bin/server ./cmd/server
 
+clean-gen:
+	rm -rf gen web/src/gen
+
 generate:
 	buf generate
 
 lint:
-	buf lint
+	buf lint api/proto

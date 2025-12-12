@@ -1,4 +1,11 @@
 import './style.css'
+import { createClient } from '@connectrpc/connect'
+import { createConnectTransport } from '@connectrpc/connect-web'
+import { create } from '@bufbuild/protobuf'
+import { DurationSchema } from '@bufbuild/protobuf/wkt'
+import { EventService } from './gen/ai/h2o/usage/v1/event_service_pb'
+import { EventSchema } from './gen/ai/h2o/usage/v1/event_pb'
+import { CreateEventRequestSchema } from './gen/ai/h2o/usage/v1/event_service_pb'
 
 interface ImageItem {
   id: string
@@ -8,6 +15,36 @@ interface ImageItem {
 }
 
 const ANIMALS = ['Dog', 'Cat', 'Bird', 'Horse', 'Elephant', 'Lion', 'Tiger', 'Bear', 'Rabbit', 'Fox']
+const USER_ID = 'users/anonymous'
+
+const transport = createConnectTransport({
+  baseUrl: 'http://localhost:50051',
+})
+
+const client = createClient(EventService, transport)
+
+async function sendUsageEvent(durationMs: number): Promise<void> {
+  const seconds = Math.floor(durationMs / 1000)
+  const nanos = Math.round((durationMs % 1000) * 1_000_000)
+
+  const event = create(EventSchema, {
+    subject: USER_ID,
+    source: 'animal-classifier',
+    action: 'classify',
+    executionDuration: create(DurationSchema, {
+      seconds: BigInt(seconds),
+      nanos: nanos,
+    }),
+  })
+
+  try {
+    const request = create(CreateEventRequestSchema, { event })
+    const response = await client.createEvent(request)
+    console.log('Usage event recorded:', response.event?.name)
+  } catch (error) {
+    console.error('Failed to send usage event:', error)
+  }
+}
 
 // In-memory storage (simulates our future API)
 const images: ImageItem[] = []
@@ -59,14 +96,20 @@ function handleFile(file: File): void {
     images.unshift(newImage)
     renderGallery()
 
-    // Simulate async classification
+    // Simulate async classification and track duration
+    const startTime = performance.now()
+    const classificationDelay = 1000 + Math.random() * 1000
+
     setTimeout(() => {
       const img = images.find(i => i.id === id)
       if (img) {
         img.classification = mockClassify()
         renderGallery()
+
+        const durationMs = performance.now() - startTime
+        sendUsageEvent(durationMs)
       }
-    }, 1000 + Math.random() * 1000)
+    }, classificationDelay)
   }
   reader.readAsDataURL(file)
 }
