@@ -9,55 +9,22 @@
   <body>
     <div id="app">
       <header>
-        <h1 id="page-title">Animal Classifier</h1>
-        <p id="page-subtitle">Upload an image to identify the animal</p>
-        <nav>
-          <a href="#classifier" class="active" data-page="classifier">Classifier</a>
-          <a href="#events" data-page="events">Events</a>
-        </nav>
+        <h1>Animal Classifier</h1>
+        <p>Upload an image to identify the animal</p>
       </header>
 
       <main>
-        <!-- Classifier Page -->
-        <div id="classifier-page" class="page">
-          <section class="upload-section">
-            <div class="upload-area" id="upload-area">
-              <input type="file" id="file-input" accept="image/*" hidden />
-              <p>Drop an image here or <button id="browse-btn">browse</button></p>
-            </div>
-          </section>
+        <section class="upload-section">
+          <div class="upload-area" id="upload-area">
+            <input type="file" id="file-input" accept="image/*" hidden />
+            <p>Drop an image here or <button id="browse-btn">browse</button></p>
+          </div>
+        </section>
 
-          <section class="gallery-section">
-            <h2>Uploaded Images</h2>
-            <div class="gallery" id="gallery"></div>
-          </section>
-        </div>
-
-        <!-- Events Page -->
-        <div id="events-page" class="page" style="display: none;">
-          <section class="events-section">
-            <div class="events-controls">
-              <button id="refresh-btn">Refresh</button>
-            </div>
-            <div class="events-table-container">
-              <table class="events-table" id="events-table">
-                <thead>
-                  <tr>
-                    <th>Event Name</th>
-                    <th>Subject</th>
-                    <th>Source</th>
-                    <th>Action</th>
-                    <th>Duration</th>
-                    <th>Created At</th>
-                  </tr>
-                </thead>
-                <tbody id="events-body">
-                </tbody>
-              </table>
-            </div>
-            <div class="pagination" id="pagination"></div>
-          </section>
-        </div>
+        <section class="gallery-section">
+          <h2>Uploaded Images</h2>
+          <div class="gallery" id="gallery"></div>
+        </section>
       </main>
     </div>
     <script type="module" src="/src/main.ts"></script>
