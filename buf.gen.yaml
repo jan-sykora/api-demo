@@ -10,28 +10,9 @@ managed:
 inputs:
   - directory: api/proto
 plugins:
-  # Go protobuf messages
   - remote: buf.build/protocolbuffers/go
     out: gen/go
     opt: paths=source_relative
-  # Go gRPC (keep for compatibility)
   - remote: buf.build/grpc/go
     out: gen/go
     opt: paths=source_relative
-  # Go Connect handlers
-  - remote: buf.build/connectrpc/go
-    out: gen/go
-    opt: paths=source_relative
-  # TypeScript protobuf messages
-  - remote: buf.build/bufbuild/es
-    out: web/src/gen
-    opt:
-      - target=ts
-      - import_extension=none
-    include_imports: true
-  # TypeScript Connect client
-  - remote: buf.build/connectrpc/es
-    out: web/src/gen
-    opt:
-      - target=ts
-      - import_extension=none

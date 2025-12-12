@@ -2,40 +2,30 @@ package server
 
 import (
 	"log"
-	"net/http"
-	"strings"
+	"net"
 
-	"connectrpc.com/cors"
-	"golang.org/x/net/http2"
-	"golang.org/x/net/http2/h2c"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 
-	"github.com/jan-sykora/api-demo/gen/go/ai/h2o/usage/v1/usagev1connect"
+	usagev1 "github.com/jan-sykora/api-demo/gen/go/ai/h2o/usage/v1"
 	"github.com/jan-sykora/api-demo/internal/usage"
 )
 
-const addr = ":50051"
+const grpcAddr = ":8081"
 
-// Run starts the Connect server.
+// Run starts the gRPC server.
 func Run() error {
-	mux := http.NewServeMux()
+	lis, err := net.Listen("tcp", grpcAddr)
+	if err != nil {
+		return err
+	}
 
-	path, handler := usagev1connect.NewEventServiceHandler(usage.NewService())
-	mux.Handle(path, handler)
+	grpcServer := grpc.NewServer()
+	usagev1.RegisterEventServiceServer(grpcServer, usage.NewService())
 
-	log.Printf("Starting Connect server on %s", addr)
-	return http.ListenAndServe(addr, withCORS(h2c.NewHandler(mux, &http2.Server{})))
-}
+	// Enable reflection for tools like grpcurl
+	reflection.Register(grpcServer)
 
-func withCORS(h http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Access-Control-Allow-Methods", strings.Join(cors.AllowedMethods(), ", "))
-		w.Header().Set("Access-Control-Allow-Headers", strings.Join(cors.AllowedHeaders(), ", "))
-		w.Header().Set("Access-Control-Expose-Headers", strings.Join(cors.ExposedHeaders(), ", "))
-		if r.Method == http.MethodOptions {
-			w.WriteHeader(http.StatusNoContent)
-			return
-		}
-		h.ServeHTTP(w, r)
-	})
+	log.Printf("Starting gRPC server on %s", grpcAddr)
+	return grpcServer.Serve(lis)
 }
