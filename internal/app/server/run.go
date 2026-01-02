@@ -11,8 +11,8 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/reflection"
 
-	usagev1 "github.com/jan-sykora/api-demo/gen/go/ai/h2o/usage/v1"
-	"github.com/jan-sykora/api-demo/internal/usage"
+	auditv1 "github.com/jan-sykora/api-demo/gen/go/ai/h2o/audit/v1"
+	"github.com/jan-sykora/api-demo/internal/audit"
 )
 
 const (
@@ -22,7 +22,7 @@ const (
 
 // Run starts the gRPC server and gRPC-Gateway HTTP server.
 func Run() error {
-	svc := usage.NewService()
+	svc := audit.NewEventService()
 
 	// Start gRPC server in a goroutine
 	go func() {
@@ -35,14 +35,14 @@ func Run() error {
 	return runHTTPServer()
 }
 
-func runGRPCServer(svc *usage.Service) error {
+func runGRPCServer(svc *audit.EventService) error {
 	lis, err := net.Listen("tcp", grpcAddr)
 	if err != nil {
 		return err
 	}
 
 	grpcServer := grpc.NewServer()
-	usagev1.RegisterEventServiceServer(grpcServer, svc)
+	auditv1.RegisterEventServiceServer(grpcServer, svc)
 
 	// Enable reflection for tools like grpcurl
 	reflection.Register(grpcServer)
@@ -58,7 +58,7 @@ func runHTTPServer() error {
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
 
 	// Register handler that proxies HTTP requests to the gRPC server
-	err := usagev1.RegisterEventServiceHandlerFromEndpoint(ctx, mux, "localhost"+grpcAddr, opts)
+	err := auditv1.RegisterEventServiceHandlerFromEndpoint(ctx, mux, "localhost"+grpcAddr, opts)
 	if err != nil {
 		return err
 	}

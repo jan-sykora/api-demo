@@ -1,4 +1,4 @@
-package usage
+package audit
 
 import (
 	"context"
@@ -12,7 +12,7 @@ import (
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	usagev1 "github.com/jan-sykora/api-demo/gen/go/ai/h2o/usage/v1"
+	auditv1 "github.com/jan-sykora/api-demo/gen/go/ai/h2o/audit/v1"
 )
 
 const (
@@ -22,31 +22,31 @@ const (
 
 // storedEvent holds the event data in memory.
 type storedEvent struct {
-	event      *usagev1.Event
+	event      *auditv1.Event
 	createTime time.Time
 }
 
-// Service implements the EventService gRPC handler.
-type Service struct {
-	usagev1.UnimplementedEventServiceServer
+// EventService implements the EventService gRPC handler.
+type EventService struct {
+	auditv1.UnimplementedEventServiceServer
 	mu     sync.RWMutex
 	events map[string]*storedEvent // keyed by event ID
 }
 
-// NewService creates a new EventService.
-func NewService() *Service {
-	return &Service{
+// NewEventService creates a new EventService.
+func NewEventService() *EventService {
+	return &EventService{
 		events: make(map[string]*storedEvent),
 	}
 }
 
-// CreateEvent creates a new usage event.
-func (s *Service) CreateEvent(ctx context.Context, req *usagev1.CreateEventRequest) (*usagev1.CreateEventResponse, error) {
+// CreateEvent creates a new event.
+func (s *EventService) CreateEvent(ctx context.Context, req *auditv1.CreateEventRequest) (*auditv1.CreateEventResponse, error) {
 	if req.GetEvent() == nil {
 		return nil, status.Error(codes.InvalidArgument, "event is required")
 	}
-	if req.GetEvent().GetSubject() == "" {
-		return nil, status.Error(codes.InvalidArgument, "subject is required")
+	if req.GetEvent().GetUser() == "" {
+		return nil, status.Error(codes.InvalidArgument, "user is required")
 	}
 	if req.GetEvent().GetSource() == "" {
 		return nil, status.Error(codes.InvalidArgument, "source is required")
@@ -62,9 +62,9 @@ func (s *Service) CreateEvent(ctx context.Context, req *usagev1.CreateEventReque
 	name := fmt.Sprintf("events/%s", id)
 	now := time.Now()
 
-	event := &usagev1.Event{
+	event := &auditv1.Event{
 		Name:              name,
-		Subject:           req.GetEvent().GetSubject(),
+		User:              req.GetEvent().GetUser(),
 		Source:            req.GetEvent().GetSource(),
 		Action:            req.GetEvent().GetAction(),
 		ExecutionDuration: req.GetEvent().GetExecutionDuration(),
@@ -78,11 +78,11 @@ func (s *Service) CreateEvent(ctx context.Context, req *usagev1.CreateEventReque
 	}
 	s.mu.Unlock()
 
-	return &usagev1.CreateEventResponse{Event: event}, nil
+	return &auditv1.CreateEventResponse{Event: event}, nil
 }
 
-// ListEvents lists usage events with pagination.
-func (s *Service) ListEvents(ctx context.Context, req *usagev1.ListEventsRequest) (*usagev1.ListEventsResponse, error) {
+// ListEvents lists events with pagination.
+func (s *EventService) ListEvents(ctx context.Context, req *auditv1.ListEventsRequest) (*auditv1.ListEventsResponse, error) {
 	pageSize := int(req.GetPageSize())
 	if pageSize <= 0 {
 		pageSize = defaultPageSize
@@ -123,7 +123,7 @@ func (s *Service) ListEvents(ctx context.Context, req *usagev1.ListEventsRequest
 	}
 
 	pageEvents := allEvents[startIdx:endIdx]
-	result := make([]*usagev1.Event, len(pageEvents))
+	result := make([]*auditv1.Event, len(pageEvents))
 	for i, stored := range pageEvents {
 		result[i] = stored.event
 	}
@@ -133,7 +133,7 @@ func (s *Service) ListEvents(ctx context.Context, req *usagev1.ListEventsRequest
 		nextPageToken = allEvents[endIdx-1].event.GetName()
 	}
 
-	return &usagev1.ListEventsResponse{
+	return &auditv1.ListEventsResponse{
 		Events:        result,
 		NextPageToken: nextPageToken,
 	}, nil

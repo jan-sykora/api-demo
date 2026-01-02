@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-grpc v1.6.0
 // - protoc             (unknown)
-// source: ai/h2o/usage/v1/event_service.proto
+// source: ai/h2o/audit/v1/event_service.proto
 
-package usagev1
+package auditv1
 
 import (
 	context "context"
@@ -19,19 +19,19 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	EventService_CreateEvent_FullMethodName = "/ai.h2o.usage.v1.EventService/CreateEvent"
-	EventService_ListEvents_FullMethodName  = "/ai.h2o.usage.v1.EventService/ListEvents"
+	EventService_CreateEvent_FullMethodName = "/ai.h2o.audit.v1.EventService/CreateEvent"
+	EventService_ListEvents_FullMethodName  = "/ai.h2o.audit.v1.EventService/ListEvents"
 )
 
 // EventServiceClient is the client API for EventService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// Service for tracking usage events.
+// Service for tracking audit events.
 type EventServiceClient interface {
-	// Creates a new usage event.
+	// Creates a new audit event.
 	CreateEvent(ctx context.Context, in *CreateEventRequest, opts ...grpc.CallOption) (*CreateEventResponse, error)
-	// Lists usage events.
+	// Lists audit events.
 	ListEvents(ctx context.Context, in *ListEventsRequest, opts ...grpc.CallOption) (*ListEventsResponse, error)
 }
 
@@ -67,11 +67,11 @@ func (c *eventServiceClient) ListEvents(ctx context.Context, in *ListEventsReque
 // All implementations must embed UnimplementedEventServiceServer
 // for forward compatibility.
 //
-// Service for tracking usage events.
+// Service for tracking audit events.
 type EventServiceServer interface {
-	// Creates a new usage event.
+	// Creates a new audit event.
 	CreateEvent(context.Context, *CreateEventRequest) (*CreateEventResponse, error)
-	// Lists usage events.
+	// Lists audit events.
 	ListEvents(context.Context, *ListEventsRequest) (*ListEventsResponse, error)
 	mustEmbedUnimplementedEventServiceServer()
 }
@@ -150,7 +150,7 @@ func _EventService_ListEvents_Handler(srv interface{}, ctx context.Context, dec 
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var EventService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "ai.h2o.usage.v1.EventService",
+	ServiceName: "ai.h2o.audit.v1.EventService",
 	HandlerType: (*EventServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -163,5 +163,5 @@ var EventService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "ai/h2o/usage/v1/event_service.proto",
+	Metadata: "ai/h2o/audit/v1/event_service.proto",
 }
