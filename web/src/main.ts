@@ -11,14 +11,13 @@ interface ImageItem {
 }
 
 const ANIMALS = ['Dog', 'Cat', 'Bird', 'Horse', 'Elephant', 'Lion', 'Tiger', 'Bear', 'Rabbit', 'Fox']
-const STORAGE_KEY = 'animal-classifier-images'
 const USER_ID = 'users/anonymous'
 
 const apiConfig: RequestConfig = {
   basePath: 'http://localhost:8080',
 }
 
-let images: ImageItem[] = loadImages()
+let images: ImageItem[] = []
 
 // --- API Functions ---
 
@@ -56,24 +55,6 @@ async function fetchEvents(): Promise<Event[]> {
   }
 }
 
-// --- Storage Functions ---
-
-function saveImages(): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(images))
-}
-
-function loadImages(): ImageItem[] {
-  const stored = localStorage.getItem(STORAGE_KEY)
-  if (stored) {
-    try {
-      return JSON.parse(stored)
-    } catch {
-      return []
-    }
-  }
-  return []
-}
-
 // --- Classifier Page ---
 
 function generateId(): string {
@@ -97,7 +78,6 @@ function renderGallery(): void {
     <div class="gallery-item">
       <img src="${img.dataUrl}" alt="${img.name}" />
       <div class="gallery-item-info">
-        <p class="gallery-item-name">${img.name}</p>
         <span class="gallery-item-classification ${img.classification ? '' : 'pending'}">
           ${img.classification || 'Classifying...'}
         </span>
@@ -122,7 +102,6 @@ function handleFile(file: File): void {
     }
 
     images.unshift(newImage)
-    saveImages()
     renderGallery()
 
     // Simulate async classification and track duration
@@ -133,7 +112,6 @@ function handleFile(file: File): void {
       const img = images.find(i => i.id === id)
       if (img) {
         img.classification = mockClassify()
-        saveImages()
         renderGallery()
 
         const durationMs = performance.now() - startTime
