@@ -58,7 +58,7 @@ func runHTTPServer() error {
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
 
 	// Register handler that proxies HTTP requests to the gRPC server
-	err := auditv1.RegisterEventServiceHandlerFromEndpoint(ctx, mux, "localhost"+grpcAddr, opts)
+	err := auditv1.RegisterEventServiceHandlerFromEndpoint(ctx, mux, "127.0.0.1"+grpcAddr, opts)
 	if err != nil {
 		return err
 	}
