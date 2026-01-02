@@ -10,6 +10,9 @@ interface ImageItem {
   classification: string | null
 }
 
+// Feature flags
+const ENABLE_EVENTS_PAGE = false
+
 const ANIMALS = ['Dog', 'Cat', 'Bird', 'Horse', 'Elephant', 'Lion', 'Tiger', 'Bear', 'Rabbit', 'Fox']
 const ANONYMOUS_USER = 'users/anonymous'
 
@@ -239,13 +242,24 @@ function updateActiveLink(): void {
   })
 }
 
+function updateNavVisibility(): void {
+  const nav = document.querySelector('header nav') as HTMLElement | null
+  if (nav) {
+    nav.style.display = ENABLE_EVENTS_PAGE ? '' : 'none'
+  }
+}
+
 function router(): void {
   const hash = window.location.hash || '#/'
   updateActiveLink()
 
   switch (hash) {
     case '#/events':
-      renderEventsPage()
+      if (ENABLE_EVENTS_PAGE) {
+        renderEventsPage()
+      } else {
+        renderClassifierPage()
+      }
       break
     default:
       renderClassifierPage()
@@ -253,5 +267,6 @@ function router(): void {
 }
 
 // Initialize
+updateNavVisibility()
 window.addEventListener('hashchange', router)
 router()
