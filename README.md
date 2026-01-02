@@ -4,11 +4,11 @@ A demonstration project for building gRPC APIs with Protocol Buffers following G
 
 ## About
 
-This project showcases how to design and implement a **Usage Tracking Service** API.
+This project showcases how to design and implement an **Event Service** API for tracking user activity.
 
 ### Use Case
 
-We're a software company building AI tools. We have an existing web app where users upload images to classify animals using AI. We need to track how much users spend on the classification tool.
+We're a software company building AI tools. We have an existing web app where users upload images to classify animals using AI. We need to track user activity for auditing purposes.
 
 ## Quick Start
 
@@ -35,18 +35,18 @@ grpcurl -plaintext localhost:8081 list
 ```bash
 grpcurl -plaintext -d '{
   "event": {
-    "subject": "users/anonymous",
+    "user": "users/anonymous",
     "source": "animal-classifier",
     "action": "classify",
     "execution_duration": "1.5s"
   }
-}' localhost:8081 ai.h2o.usage.v1.EventService/CreateEvent
+}' localhost:8081 ai.h2o.audit.v1.EventService/CreateEvent
 ```
 
 ### List events
 
 ```bash
-grpcurl -plaintext localhost:8081 ai.h2o.usage.v1.EventService/ListEvents
+grpcurl -plaintext localhost:8081 ai.h2o.audit.v1.EventService/ListEvents
 ```
 
 ### List events with pagination
@@ -54,7 +54,7 @@ grpcurl -plaintext localhost:8081 ai.h2o.usage.v1.EventService/ListEvents
 ```bash
 grpcurl -plaintext -d '{
   "page_size": 10
-}' localhost:8081 ai.h2o.usage.v1.EventService/ListEvents
+}' localhost:8081 ai.h2o.audit.v1.EventService/ListEvents
 ```
 
 ## HTTP API Examples (gRPC-Gateway)
@@ -68,7 +68,7 @@ curl -X POST http://localhost:8080/v1/events \
   -H "Content-Type: application/json" \
   -d '{
     "event": {
-      "subject": "users/anonymous",
+      "user": "users/anonymous",
       "source": "animal-classifier",
       "action": "classify",
       "execution_duration": "1.5s"

@@ -1,14 +1,14 @@
 syntax = "proto3";
 
-package ai.h2o.usage.v1;
+package ai.h2o.audit.v1;
 
-import "ai/h2o/usage/v1/event.proto";
+import "ai/h2o/audit/v1/event.proto";
 import "google/api/annotations.proto";
 import "google/api/field_behavior.proto";
 
-// Service for tracking usage events.
+// Service for tracking audit events.
 service EventService {
-  // Creates a new usage event.
+  // Creates a new audit event.
   rpc CreateEvent(CreateEventRequest) returns (CreateEventResponse) {
     option (google.api.http) = {
       post: "/v1/events"
@@ -16,7 +16,7 @@ service EventService {
     };
   }
 
-  // Lists usage events.
+  // Lists audit events.
   rpc ListEvents(ListEventsRequest) returns (ListEventsResponse) {
     option (google.api.http) = {
       get: "/v1/events"

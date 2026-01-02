@@ -1,6 +1,6 @@
 import './style.css'
-import { EventService_CreateEvent, EventService_ListEvents } from './gen/ai/h2o/usage/v1/event_service_pb'
-import type { Event } from './gen/ai/h2o/usage/v1/event_pb'
+import { EventService_CreateEvent, EventService_ListEvents } from './gen/ai/h2o/audit/v1/event_service_pb'
+import type { Event } from './gen/ai/h2o/audit/v1/event_pb'
 import type { RequestConfig } from './gen/runtime'
 
 interface ImageItem {
@@ -11,21 +11,20 @@ interface ImageItem {
 }
 
 const ANIMALS = ['Dog', 'Cat', 'Bird', 'Horse', 'Elephant', 'Lion', 'Tiger', 'Bear', 'Rabbit', 'Fox']
-const STORAGE_KEY = 'animal-classifier-images'
-const USER_ID = 'users/anonymous'
+const ANONYMOUS_USER = 'users/anonymous'
 
 const apiConfig: RequestConfig = {
   basePath: 'http://localhost:8080',
 }
 
-let images: ImageItem[] = loadImages()
+let images: ImageItem[] = []
 
 // --- API Functions ---
 
-async function sendUsageEvent(durationMs: number): Promise<void> {
+async function sendEvent(durationMs: number): Promise<void> {
   const request = EventService_CreateEvent.createRequest(apiConfig, {
     event: {
-      subject: USER_ID,
+      user: ANONYMOUS_USER,
       source: 'animal-classifier',
       action: 'classify',
       executionDuration: `${(durationMs / 1000).toFixed(3)}s`,
@@ -35,9 +34,9 @@ async function sendUsageEvent(durationMs: number): Promise<void> {
   try {
     const response = await fetch(request)
     const data = EventService_CreateEvent.responseTypeId(await response.json())
-    console.log('Usage event recorded:', data.event?.name)
+    console.log('Event recorded:', data.event?.name)
   } catch (error) {
-    console.error('Failed to send usage event:', error)
+    console.error('Failed to send event:', error)
   }
 }
 
@@ -54,24 +53,6 @@ async function fetchEvents(): Promise<Event[]> {
     console.error('Failed to fetch events:', error)
     return []
   }
-}
-
-// --- Storage Functions ---
-
-function saveImages(): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(images))
-}
-
-function loadImages(): ImageItem[] {
-  const stored = localStorage.getItem(STORAGE_KEY)
-  if (stored) {
-    try {
-      return JSON.parse(stored)
-    } catch {
-      return []
-    }
-  }
-  return []
 }
 
 // --- Classifier Page ---
@@ -97,7 +78,6 @@ function renderGallery(): void {
     <div class="gallery-item">
       <img src="${img.dataUrl}" alt="${img.name}" />
       <div class="gallery-item-info">
-        <p class="gallery-item-name">${img.name}</p>
         <span class="gallery-item-classification ${img.classification ? '' : 'pending'}">
           ${img.classification || 'Classifying...'}
         </span>
@@ -122,7 +102,6 @@ function handleFile(file: File): void {
     }
 
     images.unshift(newImage)
-    saveImages()
     renderGallery()
 
     // Simulate async classification and track duration
@@ -133,11 +112,10 @@ function handleFile(file: File): void {
       const img = images.find(i => i.id === id)
       if (img) {
         img.classification = mockClassify()
-        saveImages()
         renderGallery()
 
         const durationMs = performance.now() - startTime
-        sendUsageEvent(durationMs)
+        sendEvent(durationMs)
       }
     }, classificationDelay)
   }
@@ -204,7 +182,7 @@ async function renderEventsPage(): Promise<void> {
   const main = document.getElementById('main')!
   main.innerHTML = `
     <section class="events-section">
-      <h2>Usage Events</h2>
+      <h2>Events</h2>
       <p class="loading">Loading events...</p>
     </section>
   `
@@ -214,7 +192,7 @@ async function renderEventsPage(): Promise<void> {
   if (events.length === 0) {
     main.innerHTML = `
       <section class="events-section">
-        <h2>Usage Events</h2>
+        <h2>Events</h2>
         <p class="empty-events">No events recorded yet</p>
       </section>
     `
@@ -223,12 +201,12 @@ async function renderEventsPage(): Promise<void> {
 
   main.innerHTML = `
     <section class="events-section">
-      <h2>Usage Events</h2>
+      <h2>Events</h2>
       <table class="events-table">
         <thead>
           <tr>
             <th>Name</th>
-            <th>Subject</th>
+            <th>User</th>
             <th>Source</th>
             <th>Action</th>
             <th>Duration</th>
@@ -239,7 +217,7 @@ async function renderEventsPage(): Promise<void> {
           ${events.map(event => `
             <tr>
               <td>${event.name || '-'}</td>
-              <td>${event.subject}</td>
+              <td>${event.user}</td>
               <td>${event.source}</td>
               <td>${event.action}</td>
               <td>${event.executionDuration}</td>

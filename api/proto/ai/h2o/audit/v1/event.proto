@@ -1,16 +1,17 @@
 syntax = "proto3";
 
-package ai.h2o.usage.v1;
+package ai.h2o.audit.v1;
 
 import "google/api/field_behavior.proto";
 import "google/api/resource.proto";
 import "google/protobuf/duration.proto";
 import "google/protobuf/timestamp.proto";
 
-// A usage event recording an operation.
+// An audit event that records who performed what action and when.
+// Used for tracking and auditing user activity across services.
 message Event {
   option (google.api.resource) = {
-    type: "usage.h2o.ai/Event"
+    type: "audit.h2o.ai/Event"
     pattern: "events/{event}"
     singular: "event"
     plural: "events"
@@ -20,9 +21,9 @@ message Event {
   // Format: `events/{event}`
   string name = 1 [(google.api.field_behavior) = IDENTIFIER];
 
-  // The subject who performed the action.
+  // The user who performed the action.
   // Format: `users/{user}`
-  string subject = 2 [(google.api.field_behavior) = REQUIRED];
+  string user = 2 [(google.api.field_behavior) = REQUIRED];
 
   // The source where the action originated (e.g., "animal-classifier").
   string source = 3 [(google.api.field_behavior) = REQUIRED];

@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/protobuf/types/known/durationpb"
 
-	usagev1 "github.com/jan-sykora/api-demo/gen/go/ai/h2o/usage/v1"
+	auditv1 "github.com/jan-sykora/api-demo/gen/go/ai/h2o/audit/v1"
 )
 
 func main() {
@@ -19,13 +19,13 @@ func main() {
 	}
 	defer conn.Close()
 
-	client := usagev1.NewEventServiceClient(conn)
+	client := auditv1.NewEventServiceClient(conn)
 	ctx := context.Background()
 
 	// Create an event
-	createResp, err := client.CreateEvent(ctx, &usagev1.CreateEventRequest{
-		Event: &usagev1.Event{
-			Subject:           "users/anonymous",
+	createResp, err := client.CreateEvent(ctx, &auditv1.CreateEventRequest{
+		Event: &auditv1.Event{
+			User:              "users/anonymous",
 			Source:            "animal-classifier",
 			Action:            "classify",
 			ExecutionDuration: durationpb.New(1500 * time.Millisecond),
@@ -37,7 +37,7 @@ func main() {
 	log.Printf("Created event: %s", createResp.Event.Name)
 
 	// List events
-	listResp, err := client.ListEvents(ctx, &usagev1.ListEventsRequest{
+	listResp, err := client.ListEvents(ctx, &auditv1.ListEventsRequest{
 		PageSize: 10,
 	})
 	if err != nil {
