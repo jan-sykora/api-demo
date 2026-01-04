@@ -245,8 +245,8 @@ const file_ai_h2o_audit_v1_event_service_proto_rawDesc = "" +
 	"/v1/events\x12i\n" +
 	"\n" +
 	"ListEvents\x12\".ai.h2o.audit.v1.ListEventsRequest\x1a#.ai.h2o.audit.v1.ListEventsResponse\"\x12\x82\xd3\xe4\x93\x02\f\x12\n" +
-	"/v1/eventsB\xc6\x01\n" +
-	"\x13com.ai.h2o.audit.v1B\x11EventServiceProtoP\x01Z=github.com/jan-sykora/api-demo/gen/go/ai/h2o/audit/v1;auditv1\xa2\x02\x03AHA\xaa\x02\x0fAi.H2o.Audit.V1\xca\x02\x0fAi\\H2o\\Audit\\V1\xe2\x02\x1bAi\\H2o\\Audit\\V1\\GPBMetadata\xea\x02\x12Ai::H2o::Audit::V1b\x06proto3"
+	"/v1/eventsB\xbf\x01\n" +
+	"\x13com.ai.h2o.audit.v1B\x11EventServiceProtoP\x01Z6github.com/jan-sykora/api-demo/ai/h2o/audit/v1;auditv1\xa2\x02\x03AHA\xaa\x02\x0fAi.H2o.Audit.V1\xca\x02\x0fAi\\H2o\\Audit\\V1\xe2\x02\x1bAi\\H2o\\Audit\\V1\\GPBMetadata\xea\x02\x12Ai::H2o::Audit::V1b\x06proto3"
 
 var (
 	file_ai_h2o_audit_v1_event_service_proto_rawDescOnce sync.Once

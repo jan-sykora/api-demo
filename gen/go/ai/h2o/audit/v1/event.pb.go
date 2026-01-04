@@ -131,9 +131,9 @@ const file_ai_h2o_audit_v1_event_proto_rawDesc = "" +
 	"\x12execution_duration\x18\x05 \x01(\v2\x19.google.protobuf.DurationB\x03\xe0A\x02R\x11executionDuration\x12@\n" +
 	"\vcreate_time\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampB\x03\xe0A\x03R\n" +
 	"createTime:6\xeaA3\n" +
-	"\x12audit.h2o.ai/Event\x12\x0eevents/{event}*\x06events2\x05eventB\xbf\x01\n" +
+	"\x12audit.h2o.ai/Event\x12\x0eevents/{event}*\x06events2\x05eventB\xb8\x01\n" +
 	"\x13com.ai.h2o.audit.v1B\n" +
-	"EventProtoP\x01Z=github.com/jan-sykora/api-demo/gen/go/ai/h2o/audit/v1;auditv1\xa2\x02\x03AHA\xaa\x02\x0fAi.H2o.Audit.V1\xca\x02\x0fAi\\H2o\\Audit\\V1\xe2\x02\x1bAi\\H2o\\Audit\\V1\\GPBMetadata\xea\x02\x12Ai::H2o::Audit::V1b\x06proto3"
+	"EventProtoP\x01Z6github.com/jan-sykora/api-demo/ai/h2o/audit/v1;auditv1\xa2\x02\x03AHA\xaa\x02\x0fAi.H2o.Audit.V1\xca\x02\x0fAi\\H2o\\Audit\\V1\xe2\x02\x1bAi\\H2o\\Audit\\V1\\GPBMetadata\xea\x02\x12Ai::H2o::Audit::V1b\x06proto3"
 
 var (
 	file_ai_h2o_audit_v1_event_proto_rawDescOnce sync.Once
