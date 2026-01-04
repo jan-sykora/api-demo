@@ -6,7 +6,8 @@ Run with:
     python cmd/client_python/main.py
 
 Install dependencies first:
-    pip install betterproto grpclib
+    pip install --extra-index-url https://buf.build/gen/python \
+        jan-sykora-api-demo-audit-community-danielgtaylor-betterproto
 """
 
 import asyncio
