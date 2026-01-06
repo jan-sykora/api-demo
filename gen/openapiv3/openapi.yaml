@@ -1,0 +1,158 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: Audit Trail
+    description: Audit Trail REST API
+    version: 0.0.1
+paths:
+    /v1/events:
+        get:
+            tags:
+                - EventService
+            description: Lists audit events.
+            operationId: EventService_ListEvents
+            parameters:
+                - name: pageSize
+                  in: query
+                  description: The maximum number of events to return.
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageToken
+                  in: query
+                  description: A page token, received from a previous `ListEvents` call.
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListEventsResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - EventService
+            description: Creates a new audit event.
+            operationId: EventService_CreateEvent
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateEventRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreateEventResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+components:
+    schemas:
+        CreateEventRequest:
+            required:
+                - event
+            type: object
+            properties:
+                event:
+                    allOf:
+                        - $ref: '#/components/schemas/Event'
+                    description: The event to create.
+            description: Request message for CreateEvent.
+        CreateEventResponse:
+            type: object
+            properties:
+                event:
+                    allOf:
+                        - $ref: '#/components/schemas/Event'
+                    description: The created event.
+            description: Response message for CreateEvent.
+        Event:
+            required:
+                - user
+                - source
+                - action
+                - executionDuration
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: |-
+                        The resource name of the event.
+                         Format: `events/{event}`
+                user:
+                    type: string
+                    description: |-
+                        The user who performed the action.
+                         Format: `users/{user}`
+                source:
+                    type: string
+                    description: The source where the action originated (e.g., "animal-classifier").
+                action:
+                    type: string
+                    description: The action that was performed (e.g., "classify").
+                executionDuration:
+                    pattern: ^-?(?:0|[1-9][0-9]{0,11})(?:\.[0-9]{1,9})?s$
+                    type: string
+                    description: How long the operation took to complete.
+                createTime:
+                    readOnly: true
+                    type: string
+                    description: The time when the event was recorded.
+                    format: date-time
+            description: |-
+                An audit event that records who performed what action and when.
+                 Used for tracking and auditing user activity across services.
+        GoogleProtobufAny:
+            type: object
+            properties:
+                '@type':
+                    type: string
+                    description: The type of the serialized message.
+            additionalProperties: true
+            description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+        ListEventsResponse:
+            type: object
+            properties:
+                events:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Event'
+                    description: The list of events.
+                nextPageToken:
+                    type: string
+                    description: A token to retrieve the next page of results.
+            description: Response message for ListEvents.
+        Status:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+                    format: int32
+                message:
+                    type: string
+                    description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+                details:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GoogleProtobufAny'
+                    description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
+            description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+tags:
+    - name: EventService

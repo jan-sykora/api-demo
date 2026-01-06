@@ -1,0 +1,201 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "ai/h2o/audit/v1/event.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "EventService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/events": {
+      "get": {
+        "summary": "Lists audit events.",
+        "operationId": "EventService_ListEvents",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListEventsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "pageSize",
+            "description": "The maximum number of events to return.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "pageToken",
+            "description": "A page token, received from a previous `ListEvents` call.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "EventService"
+        ]
+      },
+      "post": {
+        "summary": "Creates a new audit event.",
+        "operationId": "EventService_CreateEvent",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CreateEventResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "Request message for CreateEvent.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1CreateEventRequest"
+            }
+          }
+        ],
+        "tags": [
+          "EventService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v1CreateEventRequest": {
+      "type": "object",
+      "properties": {
+        "event": {
+          "$ref": "#/definitions/v1Event",
+          "description": "The event to create."
+        }
+      },
+      "description": "Request message for CreateEvent.",
+      "required": [
+        "event"
+      ]
+    },
+    "v1CreateEventResponse": {
+      "type": "object",
+      "properties": {
+        "event": {
+          "$ref": "#/definitions/v1Event",
+          "description": "The created event."
+        }
+      },
+      "description": "Response message for CreateEvent."
+    },
+    "v1Event": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "The resource name of the event.\nFormat: `events/{event}`"
+        },
+        "user": {
+          "type": "string",
+          "title": "The user who performed the action.\nFormat: `users/{user}`"
+        },
+        "source": {
+          "type": "string",
+          "description": "The source where the action originated (e.g., \"animal-classifier\")."
+        },
+        "action": {
+          "type": "string",
+          "description": "The action that was performed (e.g., \"classify\")."
+        },
+        "executionDuration": {
+          "type": "string",
+          "description": "How long the operation took to complete."
+        },
+        "createTime": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The time when the event was recorded.",
+          "readOnly": true
+        }
+      },
+      "description": "An audit event that records who performed what action and when.\nUsed for tracking and auditing user activity across services.",
+      "required": [
+        "user",
+        "source",
+        "action",
+        "executionDuration"
+      ]
+    },
+    "v1ListEventsResponse": {
+      "type": "object",
+      "properties": {
+        "events": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Event"
+          },
+          "description": "The list of events."
+        },
+        "nextPageToken": {
+          "type": "string",
+          "description": "A token to retrieve the next page of results."
+        }
+      },
+      "description": "Response message for ListEvents."
+    }
+  }
+}

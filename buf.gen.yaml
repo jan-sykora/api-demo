@@ -22,3 +22,22 @@ plugins:
     out: web/src/gen
     opt:
       - target=ts
+  - remote: buf.build/grpc-ecosystem/openapiv2:v2.27.4
+    out: gen/openapiv2
+    opt:
+      - proto3_optional_nullable=true
+      - allow_merge=true
+      - merge_file_name=audit
+  - remote: buf.build/grpc-ecosystem/openapiv2:v2.27.4
+    out: gen/openapiv2
+    opt:
+      - proto3_optional_nullable=true
+      - allow_merge=true
+      - merge_file_name=audit
+      - output_format=yaml
+  - remote: buf.build/community/google-gnostic-openapi:v0.7.1
+    out: gen/openapiv3
+    opt:
+      - title=Audit Trail
+      - description=Audit Trail REST API
+      - enum_type=string
