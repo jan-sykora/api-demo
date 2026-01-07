@@ -2,6 +2,7 @@ package audit
 
 import (
 	"context"
+	"encoding/base64"
 	"fmt"
 	"sort"
 	"sync"
@@ -105,11 +106,16 @@ func (s *EventService) ListEvents(ctx context.Context, req *auditv1.ListEventsRe
 		return allEvents[i].createTime.After(allEvents[j].createTime)
 	})
 
-	// Handle pagination
+	// Handle pagination - decode the base64 page token
 	startIdx := 0
 	if req.GetPageToken() != "" {
+		decoded, err := base64.StdEncoding.DecodeString(req.GetPageToken())
+		if err != nil {
+			return nil, status.Error(codes.InvalidArgument, "invalid page token")
+		}
+		decodedName := string(decoded)
 		for i, e := range allEvents {
-			if e.event.GetName() == req.GetPageToken() {
+			if e.event.GetName() == decodedName {
 				startIdx = i + 1
 				break
 			}
@@ -128,9 +134,10 @@ func (s *EventService) ListEvents(ctx context.Context, req *auditv1.ListEventsRe
 		result[i] = stored.event
 	}
 
+	// Encode the next page token as base64
 	var nextPageToken string
 	if endIdx < len(allEvents) {
-		nextPageToken = allEvents[endIdx-1].event.GetName()
+		nextPageToken = base64.StdEncoding.EncodeToString([]byte(allEvents[endIdx-1].event.GetName()))
 	}
 
 	return &auditv1.ListEventsResponse{
