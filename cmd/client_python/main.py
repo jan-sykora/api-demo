@@ -26,9 +26,9 @@ async def main():
     try:
         # Create an event
         event = Event(
-            user='users/python-client',
-            source='animal-classifier',
-            action='classify',
+            user='users/jan-sykora',
+            source='ai-engine-manager',
+            action='create-engine',
             execution_duration=timedelta(milliseconds=1500),
         )
 
@@ -40,7 +40,7 @@ async def main():
         print(f'Found {len(list_response.events)} events:')
         for evt in list_response.events:
             duration_ms = evt.execution_duration.total_seconds() * 1000
-            print(f'  - {evt.name}: {evt.source}/{evt.action} - {evt.user} (took {duration_ms}ms)')
+            print(f'  - {evt.name}: {evt.source}/{evt.action}, {evt.user} (took {duration_ms}ms)')
 
     finally:
         channel.close()

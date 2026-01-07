@@ -11,10 +11,9 @@ interface ImageItem {
 }
 
 // Feature flags
-const ENABLE_EVENTS_PAGE = false
+const ENABLE_EVENTS_PAGE = true
 
 const ANIMALS = ['Dog', 'Cat', 'Bird', 'Horse', 'Elephant', 'Lion', 'Tiger', 'Bear', 'Rabbit', 'Fox']
-const ANONYMOUS_USER = 'users/anonymous'
 
 const apiConfig: RequestConfig = {
   basePath: 'http://localhost:8080',
@@ -27,7 +26,7 @@ let images: ImageItem[] = []
 async function sendEvent(durationMs: number): Promise<void> {
   const request = EventService_CreateEvent.createRequest(apiConfig, {
     event: {
-      user: ANONYMOUS_USER,
+      user: 'users/felix',
       source: 'animal-classifier',
       action: 'classify',
       executionDuration: `${(durationMs / 1000).toFixed(3)}s`,

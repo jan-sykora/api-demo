@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"time"
 
@@ -25,16 +26,16 @@ func main() {
 	// Create an event
 	createResp, err := client.CreateEvent(ctx, &auditv1.CreateEventRequest{
 		Event: &auditv1.Event{
-			User:              "users/anonymous",
-			Source:            "animal-classifier",
-			Action:            "classify",
+			User:              "users/tomas-pastorek",
+			Source:            "authorization-service",
+			Action:            "create-role",
 			ExecutionDuration: durationpb.New(1500 * time.Millisecond),
 		},
 	})
 	if err != nil {
 		log.Fatalf("Failed to create event: %v", err)
 	}
-	log.Printf("Created event: %s", createResp.Event.Name)
+	fmt.Printf("Created event: %s\n", createResp.Event.Name)
 
 	// List events
 	listResp, err := client.ListEvents(ctx, &auditv1.ListEventsRequest{
@@ -43,8 +44,8 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to list events: %v", err)
 	}
-	log.Printf("Found %d events:", len(listResp.Events))
+	fmt.Printf("Found %d events:\n", len(listResp.Events))
 	for _, event := range listResp.Events {
-		log.Printf("  - %s: %s/%s (took %v)", event.Name, event.Source, event.Action, event.ExecutionDuration.AsDuration())
+		fmt.Printf("  - %s: %s/%s, %s (took %v)\n", event.Name, event.Source, event.Action, event.User, event.ExecutionDuration.AsDuration())
 	}
 }
